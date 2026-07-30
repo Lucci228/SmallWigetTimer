@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tauri App</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <main class="flex-container">
+      <div class="title-container header" id = "title-container">
+        <img class = "cat-logo" src = "src-tauri/icons/128x128@2x.png">
+        <h1 class="page-title" id = "title-text">Beb Moment in Progress</h1>
+      </div>
+      <div class = "body-container content">
+        <div class="loading-cat" id = "load-cat">
+          <div class="body"></div>
+          <div class="head">
+              <div class="face"></div>
+          </div>
+          <div class="foot">
+              <div class="tummy-end">
+              </div>
+              <div class="bottom">
+              </div>
+              <div class="legs left">
+              </div>
+              <div class="legs right">
+              </div>
+          </div>
+          <div class="hands left">
+          </div>
+          <div class="hands right">
+          </div>
+        </div>
+        <div class="timer-cat hidden" id = "cat-container">
+          <img class = "dance-cat" id = "dance-cat" src = "src/assets/cat-cute.gif">
+        </div>
+        <div class ="loading-text">
+          <p id = "loading-text"></p>
+          <button class = "rage-hover cool-btn hidden" id = "refresh-btn"></button>
+        </div>
+        <audio id="myAudio">
+          <source src="src/assets/slots.wav" type="audio/ogg">
+        </audio>
+      </div>
+    </main>
+  </body>
+</html>

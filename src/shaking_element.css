@@ -1,0 +1,108 @@
+
+
+/* Generalized Base Class - Apply to any tag (button, a, div, span) */
+.shake-element {
+  all: unset;
+  display: inline-block; /* Essential for transform/scale/translate animations on inline elements */
+}
+
+/* Rage Hover State */
+.shake-element {
+  animation: 
+    1s shake-1 ease-in infinite, 
+    1s shake-2 ease-in infinite 1.5s, 
+    1s shake-3 ease-in infinite 2.5s, 
+    0.5s shake-4 ease-in infinite 3s, 
+    0.5s shake-5 ease-in infinite 4s, 
+    0.5s shake-6 ease-in infinite 5s;
+  scale: 1.4;
+  transition: 3s var(--ease-in, ease-in);
+  transition-property: box-shadow, background, scale;
+}
+
+
+
+/* Shake/Rage Animation Levels */
+@keyframes shake-1 {
+  0% { translate: -5.5px -2px; rotate: 0deg; }
+  10% { translate: 7.5px -3px; rotate: 1deg; }
+  20% { translate: 1.5px 0px; rotate: 1deg; }
+  30% { translate: -5.5px 0px; rotate: 1deg; }
+  40% { translate: -6.5px 2px; rotate: 0deg; }
+  50% { translate: -6.5px 2px; rotate: 1deg; }
+  60% { translate: 7.5px -3px; rotate: 1deg; }
+  70% { translate: -5.5px 2px; rotate: 1deg; }
+  80% { translate: 4.5px -2px; rotate: 1deg; }
+  90% { translate: -6.5px 0px; rotate: 1deg; }
+  100% { translate: -2.5px -3px; rotate: 0deg; }
+}
+
+@keyframes shake-2 {
+  0% { translate: -3px 2px; rotate: 2deg; }
+  10% { translate: 13px -2px; rotate: 0deg; }
+  20% { translate: -7px 4px; rotate: 2deg; }
+  30% { translate: -11px 0px; rotate: 0deg; }
+  40% { translate: -5px -6px; rotate: 0deg; }
+  50% { translate: -3px -2px; rotate: 2deg; }
+  60% { translate: 7px -8px; rotate: 2deg; }
+  70% { translate: -7px 10px; rotate: 2deg; }
+  80% { translate: -7px 0px; rotate: 0deg; }
+  90% { translate: -7px 4px; rotate: 2deg; }
+  100% { translate: 5px 2px; rotate: 0deg; }
+}
+
+@keyframes shake-3 {
+  0% { translate: 16.5px -3px; rotate: 3deg; }
+  10% { translate: 19.5px 6px; rotate: 0deg; }
+  20% { translate: 1.5px 15px; rotate: 3deg; }
+  30% { translate: 19.5px 15px; rotate: 0deg; }
+  40% { translate: -1.5px 9px; rotate: 3deg; }
+  50% { translate: 1.5px -6px; rotate: 0deg; }
+  60% { translate: -4.5px -12px; rotate: 0deg; }
+  70% { translate: -10.5px -3px; rotate: 0deg; }
+  80% { translate: 1.5px 9px; rotate: 0deg; }
+  90% { translate: 19.5px 12px; rotate: 3deg; }
+  100% { translate: -4.5px 15px; rotate: 0deg; }
+}
+
+@keyframes shake-4 {
+  0% { translate: 6px -8px; rotate: 4deg; }
+  10% { translate: -10px -4px; rotate: 4deg; }
+  20% { translate: -18px -12px; rotate: 4deg; }
+  30% { translate: 30px -4px; rotate: 4deg; }
+  40% { translate: -14px -4px; rotate: 0deg; }
+  50% { translate: -14px -4px; rotate: 0deg; }
+  60% { translate: 2px -12px; rotate: 4deg; }
+  70% { translate: -2px 16px; rotate: 4deg; }
+  80% { translate: 22px 0px; rotate: 4deg; }
+  90% { translate: -10px -16px; rotate: 4deg; }
+  100% { translate: 14px 16px; rotate: 4deg; }
+}
+
+@keyframes shake-5 {
+  0% { translate: 27.5px 0px; rotate: 0deg; }
+  10% { translate: 12.5px 0px; rotate: 0deg; }
+  20% { translate: -12.5px 15px; rotate: 0deg; }
+  30% { translate: 37.5px -5px; rotate: 5deg; }
+  40% { translate: -17.5px -5px; rotate: 0deg; }
+  50% { translate: 27.5px -20px; rotate: 5deg; }
+  60% { translate: -32.5px -20px; rotate: 0deg; }
+  70% { translate: 2.5px -15px; rotate: 0deg; }
+  80% { translate: -7.5px 10px; rotate: 5deg; }
+  90% { translate: -32.5px -20px; rotate: 5deg; }
+  100% { translate: -27.5px -15px; rotate: 5deg; }
+}
+
+@keyframes shake-6 {
+  0% { translate: 15px -6px; rotate: 6deg; }
+  10% { translate: 45px 0px; rotate: 0deg; }
+  20% { translate: -9px 18px; rotate: 6deg; }
+  30% { translate: -21px -18px; rotate: 6deg; }
+  40% { translate: -39px -6px; rotate: 0deg; }
+  50% { translate: -27px -12px; rotate: 6deg; }
+  60% { translate: -3px -24px; rotate: 6deg; }
+  70% { translate: -9px 18px; rotate: 0deg; }
+  80% { translate: -3px 12px; rotate: 0deg; }
+  90% { translate: 3px 24px; rotate: 0deg; }
+  100% { translate: 33px -6px; rotate: 0deg; }
+}

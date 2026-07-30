@@ -1,0 +1,13 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:window:deny-maximize",
+    "core:window:deny-internal-toggle-maximize",
+    "core:default",
+    "opener:default"
+    
+  ]
+}
