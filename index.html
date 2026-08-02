@@ -48,12 +48,14 @@
                 <audio loop id="myAudio">
                     <source src="src/assets/slots.wav" type="audio/wav" />
                 </audio>
-                <dialog class="windows-notification" id="dialog1">
+                <dialog class="windows-notification" id="dialog1" hidden>
                     <header class="windows-bar">
                         <button class = "windows-close-btn">X</button>
                     </header>
-                    <p>Siiiigur?</p>
-                    <form><button>Close</button></form>
+                    <div class = "windows-content">
+                        <p>Siiiigur?</p>
+                        <form><button>Close</button></form>
+                    </div>
                 </dialog>
 
                 <button command="show-modal" commandfor="dialog1">
