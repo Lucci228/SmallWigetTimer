@@ -1,0 +1,30 @@
+dialog {
+    width: 400px;
+    height: 200px;
+    border: 0;
+}
+
+dialog::backdrop {
+    /*background: rgba(0, 0, 0, 0.6);*/
+    backdrop-filter: blur(10px);
+}
+
+.windows-notification {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: medium solid blue;
+    
+}
+
+.windows-bar {
+    display: flex;
+    justify-content: right;
+    background: linear-gradient(
+      to right,
+      #0055d4 0%,
+      #127dfa 50%,
+      #0055d4 100%
+    );
+    margin: 0;
+}

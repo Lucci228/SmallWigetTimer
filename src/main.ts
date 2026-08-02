@@ -30,7 +30,6 @@ function playAudio(element: HTMLAudioElement | null) {
   if (!element) return;
   element.volume = 0.05;
   togglePlay(element);
-  togglePlay(element);
 }
 
 function refreshTitle(): void {
@@ -85,9 +84,9 @@ const newTimerValue = (min: number, max: number) => {
 const button = document.getElementById("refresh-btn");
 button?.addEventListener("click", () => restart_timer());
 
-window.addEventListener("DOMContentLoaded", () => {
-  startTimer();
-  console.log("Timer is " + randomTimer);
-});
+// window.addEventListener("DOMContentLoaded", () => {
+//   startTimer();
+//   console.log("Timer is " + randomTimer);
+// });
 
 window.setInterval(incrementText, timeout);

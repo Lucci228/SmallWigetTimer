@@ -1,5 +1,5 @@
 
-  
+
   .loading-cat {
     position: relative;
     display: inline-block;
@@ -8,7 +8,7 @@
     animation: 2.74s linear infinite loading-cat;
   }
 
-  
+
   .loading-cat .head, .loading-cat .foot, .loading-cat .body {
     position: absolute;
     top: 0;
@@ -30,7 +30,7 @@
            #383c4b 100%);
   }
   .loading-cat .head:before, .loading-cat .foot:before {
-    background-image: radial-gradient(transparent 0%, 
+    background-image: radial-gradient(transparent 0%,
     transparent 35%, #383c4b 35%, #383c4b 39%,
      #eda65d 39%, #eda65d 67%, #383c4b 67%,
       #383c4b 100%);
@@ -51,7 +51,7 @@
     position: absolute;
     top: 13px;
     right: 63px;
-    background-image: 
+    background-image:
     linear-gradient(#ffc1b2 65%, transparent 65%),
      radial-gradient(#ffc1b2 51%, #383c4b 55%,
       #383c4b 68%, transparent 70%);
@@ -73,10 +73,10 @@
           transparent 15%) 0 -11px no-repeat,
            radial-gradient(circle, transparent 5%,
             #383c4b 5%, #383c4b 10%, transparent 10%)
-             -3px -5px no-repeat, 
+             -3px -5px no-repeat,
              radial-gradient(circle, transparent 5%,
               #383c4b 5%, #383c4b 10%, transparent 10%)
-               3px -5px no-repeat, 
+               3px -5px no-repeat,
                radial-gradient(circle, #eda65d 45%, transparent 45%)
                 0 -3px, linear-gradient(transparent 35%, #383c4b 35%,
                  #383c4b 41%, transparent 41%, transparent 44%,
@@ -255,7 +255,3 @@
   .loading-cat .foot {
     animation: 2.74s linear infinite foot;
   }
-
-
-
-
