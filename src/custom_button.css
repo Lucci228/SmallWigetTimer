@@ -8,7 +8,7 @@
     box-sizing: border-box;
     padding: 0.75em;
     font-size: max(20px, 5vw);
-    background: #2c73d2;
+    background: #f98f71;
     color: white;
     min-width: 5ch;
     text-align: center;
@@ -24,8 +24,9 @@
 .rage-element::before {
     content: "😔O sa ii dau";
     margin-right: 0.25em;
-    animation: 5s breathe infinite forwards 5s;
 }
+
+
 
 /* Base Breathe Keyframes */
 @keyframes breathe {

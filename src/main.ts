@@ -77,6 +77,11 @@ function toggleShake(element: HTMLElement | null) {
   console.log("Toggled element " + element.id);
 }
 
+function closeDialog(element:HTMLDialogElement | null) {
+  if (!element) return;
+  element.close();
+}
+
 const newTimerValue = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -84,9 +89,15 @@ const newTimerValue = (min: number, max: number) => {
 const button = document.getElementById("refresh-btn");
 button?.addEventListener("click", () => restart_timer());
 
-// window.addEventListener("DOMContentLoaded", () => {
-//   startTimer();
-//   console.log("Timer is " + randomTimer);
-// });
+const dialog1 = <HTMLDialogElement>document.getElementById("dialog1")
+
+window.addEventListener("DOMContentLoaded", () => {
+  startTimer();
+  
+  console.log("Timer is " + randomTimer);
+});
+
+document.getElementById("close-btn")?.addEventListener("click", () => dialog1.close())
+
 
 window.setInterval(incrementText, timeout);

@@ -40,27 +40,33 @@
                 </div>
                 <div class="loading-text">
                     <p id="loading-text"></p>
+                    <div class = "rage-hover">
                     <button
                         class="rage-hover cool-btn hidden"
                         id="refresh-btn"
                     ></button>
+                    </div>
+                  <button class="glow-bg" command="show-modal" commandfor="dialog1">
+                      Open dialog
+                  </button>
                 </div>
                 <audio loop id="myAudio">
                     <source src="src/assets/slots.wav" type="audio/wav" />
                 </audio>
-                <dialog class="windows-notification" id="dialog1" hidden>
+                <dialog class="windows-notification" id="dialog1">
                     <header class="windows-bar">
-                        <button class = "windows-close-btn">X</button>
+                        <button class = "windows-close-btn" id="close-btn">✖</button>
                     </header>
                     <div class = "windows-content">
                         <p>Siiiigur?</p>
-                        <form><button>Close</button></form>
+                        <div class="window-btn-container">
+                          <button class="window-btn">Daa</button>
+                          <button class="window-btn">Sigur</button>
+                        </div>
                     </div>
                 </dialog>
 
-                <button command="show-modal" commandfor="dialog1">
-                    Open dialog
-                </button>
+
             </div>
         </main>
     </body>

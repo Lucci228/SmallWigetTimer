@@ -19,6 +19,22 @@
   -webkit-text-size-adjust: 100%;
 }
 
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spin {  to {--a: 360deg;  } }
+
+.glow-bg {
+  background: conic-gradient(from var(--a), red, yellow);
+  animation: spin 3s linear infinite;
+  z-index: -1;
+  border: inherit;
+  padding: 3px
+}
+
 body {
 
   height: 100vh;
