@@ -1,7 +1,6 @@
 @import url("custom_button.css");
 @import url("cat_loading.css");
 @import url("shaking_element.css");
-@import url("windows-dialog.css");
 @import url('https://fonts.googleapis.com/css2?family=Short+Stack&display=swap');
 
 :root {
@@ -28,11 +27,21 @@
 @keyframes spin {  to {--a: 360deg;  } }
 
 .glow-bg {
-  background: conic-gradient(from var(--a), red, yellow);
-  animation: spin 3s linear infinite;
-  z-index: -1;
-  border: inherit;
-  padding: 3px
+    display: inline-block;
+    padding: 2px;
+    border-radius: 16px;
+    background: conic-gradient(from var(--a), red, blueviolet, red);
+    animation: spin 3s linear infinite;
+}
+
+.btn {
+    width: 100px;
+    height: 50px;
+    border-radius: 12px;
+    background: black;
+    display: grid;
+    place-items: center;
+    color: white;
 }
 
 body {

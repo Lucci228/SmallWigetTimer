@@ -1,3 +1,5 @@
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+
 let globalCounter: number = 0;
 let randomTimer: number = 0;
 let timerReset: boolean = true;
@@ -16,8 +18,8 @@ function toggleLoading(): void {
   const refresh_btn = document.getElementById("refresh-btn");
   const loading_text = document.getElementById("loading-text");
   const title_message = document.getElementById("title-text");
-  const slots_audio = <HTMLAudioElement>document.getElementById("myAudio");
-  playAudio(slots_audio);
+  // const slots_audio = <HTMLAudioElement>document.getElementById("myAudio");
+  // playAudio(slots_audio);
   toggleVisibility(load_logo);
   toggleVisibility(dance_cat);
   toggleVisibility(refresh_btn);
@@ -77,9 +79,33 @@ function toggleShake(element: HTMLElement | null) {
   console.log("Toggled element " + element.id);
 }
 
-function closeDialog(element:HTMLDialogElement | null) {
-  if (!element) return;
-  element.close();
+// function closeDialog(element:HTMLDialogElement | null) {
+//   if (!element) return;
+//   element.close();
+// }
+
+async function createPopup() {
+  console.log("Invoked function createPopup");
+
+  // WebviewWindow creates both the window and webview together
+  const popup = new WebviewWindow('popup-label', {
+    url: '/src/components/popup/popup.html', // path to your page
+    width: 400,
+    height: 200,
+    title: 'Popup Window',
+    resizable: true,
+    center: true,
+  });
+
+  // Listen for window creation failure
+  popup.once('tauri://error', (e) => {
+    console.error('Error creating popup window:', e);
+  });
+
+  // Listen for window creation success
+  popup.once('tauri://created', () => {
+    console.log('Popup window successfully created!');
+  });
 }
 
 const newTimerValue = (min: number, max: number) => {
@@ -93,11 +119,14 @@ const dialog1 = <HTMLDialogElement>document.getElementById("dialog1")
 
 window.addEventListener("DOMContentLoaded", () => {
   startTimer();
-  
+
   console.log("Timer is " + randomTimer);
 });
 
 document.getElementById("close-btn")?.addEventListener("click", () => dialog1.close())
+document.getElementById("popup-btn")?.addEventListener("click", () => createPopup())
+
+
 
 
 window.setInterval(incrementText, timeout);

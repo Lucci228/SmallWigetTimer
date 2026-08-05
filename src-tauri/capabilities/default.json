@@ -7,7 +7,8 @@
     "core:window:deny-maximize",
     "core:window:deny-internal-toggle-maximize",
     "core:default",
-    "opener:default"
-    
+    "opener:default",
+    "core:webview:allow-create-webview-window"
+
   ]
 }
