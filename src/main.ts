@@ -88,12 +88,13 @@ async function createPopup() {
   console.log("Invoked function createPopup");
 
   // WebviewWindow creates both the window and webview together
-  const popup = new WebviewWindow('popup-label', {
+  const popup = new WebviewWindow('popup', {
     url: '/src/components/popup/popup.html', // path to your page
     width: 400,
     height: 200,
+    decorations: false,
     title: 'Popup Window',
-    resizable: true,
+    resizable: false,
     center: true,
   });
 
