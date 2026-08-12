@@ -1,8 +1,9 @@
-import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 let globalCounter: number = 0;
 let randomTimer: number = 0;
 let timerReset: boolean = true;
+let popupNoise: HTMLAudioElement = new Audio('src/assets/popup.mp3')
 const timeout: number = 1000;
 const min_timer = 5;
 const max_timer = 10;
@@ -33,6 +34,8 @@ function playAudio(element: HTMLAudioElement | null) {
   element.volume = 0.05;
   togglePlay(element);
 }
+
+
 
 function refreshTitle(): void {
   const title_container = document.getElementById("title-text");
@@ -84,28 +87,40 @@ function toggleShake(element: HTMLElement | null) {
 //   element.close();
 // }
 
+function toggleBlock(): void {
+  document.getElementById("main")?.classList.toggle("blocked");
+}
+
 async function createPopup() {
   console.log("Invoked function createPopup");
 
   // WebviewWindow creates both the window and webview together
-  const popup = new WebviewWindow('popup', {
-    url: '/src/components/popup/popup.html', // path to your page
+  const popup = new WebviewWindow("popup", {
+    url: "/src/components/popup/popup.html", // path to your page
     width: 400,
     height: 200,
     decorations: false,
-    title: 'Popup Window',
+    title: "Popup Window",
     resizable: false,
     center: true,
   });
 
   // Listen for window creation failure
-  popup.once('tauri://error', (e) => {
-    console.error('Error creating popup window:', e);
+  popup.once("tauri://error", (e) => {
+    console.error("Error creating popup window:", e);
   });
 
   // Listen for window creation success
-  popup.once('tauri://created', () => {
-    console.log('Popup window successfully created!');
+  popup.once("tauri://created", () => {
+    console.log("Popup window successfully created!");
+    popupNoise.load()
+    popupNoise.play();
+    //play noises
+    //focus window
+  });
+
+  popup.once("tauri://destroyed", async () => {
+    toggleBlock();
   });
 }
 
@@ -116,7 +131,7 @@ const newTimerValue = (min: number, max: number) => {
 const button = document.getElementById("refresh-btn");
 button?.addEventListener("click", () => restart_timer());
 
-const dialog1 = <HTMLDialogElement>document.getElementById("dialog1")
+const dialog1 = <HTMLDialogElement>document.getElementById("dialog1");
 
 window.addEventListener("DOMContentLoaded", () => {
   startTimer();
@@ -124,10 +139,12 @@ window.addEventListener("DOMContentLoaded", () => {
   console.log("Timer is " + randomTimer);
 });
 
-document.getElementById("close-btn")?.addEventListener("click", () => dialog1.close())
-document.getElementById("popup-btn")?.addEventListener("click", () => createPopup())
-
-
-
+document
+  .getElementById("close-btn")
+  ?.addEventListener("click", () => dialog1.close());
+document.getElementById("popup-btn")?.addEventListener("click", () => {
+  createPopup();
+  toggleBlock();
+});
 
 window.setInterval(incrementText, timeout);

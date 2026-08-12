@@ -50,8 +50,13 @@ main {
 }
 
 .windows-bar {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    font-weight: bold;
+    color: white;
     display: flex;
-    justify-content: right;
+    align-items: center;
+    justify-content: space-between;
+
     background: linear-gradient(
       to right,
       #0055d4 0%,
@@ -66,10 +71,15 @@ main {
 }
 
 .window-btn-container {
+    align-self: flex-end;
     display: flex;
     justify-content: center;
     flex-direction: row;
     gap: 50px;
+}
+
+.header-text {
+    align-self: flex-start;
 }
 
 .window-btn {

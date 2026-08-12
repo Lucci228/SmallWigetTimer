@@ -170,3 +170,8 @@ body {
   font-family: 'Short Stack', cursive;
   text-shadow: 3px 3px 0 #ffd7e0;
 }
+
+.blocked {
+    filter: blur(10px) grayscale(70%) brightness(70%);
+    pointer-events: none;
+}
