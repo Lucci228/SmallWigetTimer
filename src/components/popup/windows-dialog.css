@@ -25,6 +25,8 @@ main {
 }
 
 .windows-content {
+    display: flex;
+    flex-direction: column;
     width: auto;
     flex: 1;
     border: medium solid blue;
@@ -35,7 +37,7 @@ main {
 .windows-close-btn {
     height: 20px;
     width: 20px;
-    margin: 5px;
+    margin-right: 5px;
     display: flex;
     justify-content: center;
     padding: 0;
@@ -71,25 +73,61 @@ main {
 }
 
 .window-btn-container {
-    align-self: flex-end;
+    margin-top: auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     flex-direction: row;
-    gap: 50px;
+    margin-bottom: 30px;
+}
+
+.emoji-img{
+    max-width: 60%;
+    max-height: 60%;
+    margin-right: 10px;
+}
+
+.body-header{
+    width: auto ;
+    height: 100px;
+    margin-top: 10px;
+    display: flex;
+    justify-content:space-between;
+    font-size: 1.5em;
+}
+
+.body-text{
+    margin-top: 10px;
 }
 
 .header-text {
-    align-self: flex-start;
+    /*align-self: flex-start;*/
+
+    margin-left: 5px;
 }
 
 .window-btn {
     background: white;
     border-radius: 5px;
     font-size: large;
+    animation-delay: 5s;
 }
 
 .window-btn:hover {
     background: rgb(231, 231, 231);
     border-radius: 5px;
     border-color: #004ab9;
+}
+
+.growing-element{
+    animation: growShrink 2s ease-in-out infinite alternate;
+    transform-origin: bottom left;
+}
+
+@keyframes growShrink {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.2);
+  }
 }
