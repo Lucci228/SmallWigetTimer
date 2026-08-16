@@ -16,6 +16,10 @@ main {
     height: 100%;
 }
 
+span {
+    margin: auto;
+}
+
 .windows-notification {
     display: flex;
     width: 100%;
@@ -96,8 +100,17 @@ main {
 }
 
 .body-text{
+    /*width: 20ch;*/
+    /*height: 2ch;*/
+    height: fit-content ;
+    overflow: hidden;
+    white-space: nowrap;
     margin-top: 10px;
+    border-right: 2px solid;
+    /*animation: type 5s steps(20) forwards ;*/
 }
+
+/*@keyframes type {from {width: 0} to { width: 20ch; }}*/
 
 .header-text {
     /*align-self: flex-start;*/
@@ -105,22 +118,90 @@ main {
     margin-left: 5px;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .window-btn {
     background: white;
     border-radius: 5px;
+    height: 35px;
+    width: 90px;
     font-size: large;
     animation-delay: 5s;
+
+    text-decoration: none;
+    color: black;
+    font-size: 1em;
+    border: 0px;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    justify-content: center;
+    display: flex;
+    font-size: 1em;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .window-btn:hover {
-    background: rgb(231, 231, 231);
+    background: rgb(211, 211, 211);
     border-radius: 5px;
-    border-color: #004ab9;
+    border: 2px solid darkblue;
+}
+
+.rainbow-glow {
+  position: relative;
+  isolation: isolate; /* keeps ::after glow behind this element's own content */
+}
+
+.rainbow-glow::after {
+  content: "";
+  position: absolute;
+  inset: 1px; /* how far the glow extends beyond the element's edges */
+  z-index: -1;
+  border-radius: inherit; /* matches the element's own border-radius */
+  background: conic-gradient(
+    from 180deg,
+    red,
+    orange,
+    yellow,
+    limegreen,
+    cyan,
+    blue,
+    violet,
+    magenta,
+    red
+  );
+  filter: blur(12px) saturate(1.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rainbow-glow:hover::after {
+  opacity: 0.5;
 }
 
 .growing-element{
-    animation: growShrink 2s ease-in-out infinite alternate;
-    transform-origin: bottom left;
+    /*animation: growShrink 1s ease-in-out infinite alternate;
+    transform-origin: bottom left;*/
+}
+
+.growing-element.delayed {
+    animation-delay: 2s;
+}
+
+.grow-shake {
+    animation: grow-shake 1.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    transform-origin: center center;
+}
+
+.header-text.shake {
+    animation: shake 0.5s ease-in;
+    transform-origin: center center;
+}
+
+#wrong-btn:hover {
+    animation: shrink 0.5s ease-in forwards;
+    animation-iteration-count: 1;
 }
 
 @keyframes growShrink {
@@ -129,5 +210,48 @@ main {
   }
   100% {
     transform: scale(1.2);
+  }
+}
+
+@keyframes  shrink {
+    0% {
+        transform: scale(1);
+    }
+    100%  {
+        transform: scale(0.7);
+    }
+}
+
+@keyframes shake {
+    35% { transform: scale(1.2) translate(-4px, 2px) rotate(-6deg); }
+    42% { transform: scale(1.2) translate(4px, -2px) rotate(6deg); }
+    49% { transform: scale(1.2) translate(-4px, -1px) rotate(-6deg); }
+    56% { transform: scale(1.2) translate(4px, 1px) rotate(6deg); }
+    63% { transform: scale(1.2) translate(-3px, 2px) rotate(-4deg); }
+    70% { transform: scale(1.2) translate(3px, -1px) rotate(4deg); }
+    75% { transform: scale(1.2) translate(0, 0) rotate(0deg); }
+}
+
+@keyframes grow-shake {
+  /* --- 1. GROW A LITTLE (0% to 30%) --- */
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.2) translate(0, 0) rotate(0deg);
+  }
+
+  /* --- 2. FAST SHAKE AT PEAK SCALE (35% to 75%) --- */
+  35% { transform: scale(1.5) translate(-4px, 2px) rotate(-6deg); }
+  42% { transform: scale(1.5) translate(4px, -2px) rotate(6deg); }
+  49% { transform: scale(1.5) translate(-4px, -1px) rotate(-6deg); }
+  56% { transform: scale(1.5) translate(4px, 1px) rotate(6deg); }
+  63% { transform: scale(1.5) translate(-3px, 2px) rotate(-4deg); }
+  70% { transform: scale(1.5) translate(3px, -1px) rotate(4deg); }
+  75% { transform: scale(1.5) translate(0, 0) rotate(0deg); }
+
+  /* --- 3. SHRINK BACK TO ORIGINAL (75% to 100%) --- */
+  100% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
   }
 }

@@ -14,7 +14,7 @@
     text-align: center;
     border-radius: 0.25em;
     cursor: pointer;
-    box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+    box-shadow: 0 0 1em #bc5b40;
     transition: 0.5s var(--ease-in, ease-in);
     will-change: box-shadow, transform;
 }

@@ -3,6 +3,8 @@ import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 let globalCounter: number = 0;
 let randomTimer: number = 0;
 let timerReset: boolean = true;
+let popupActive: boolean = false;
+let closeRequest: boolean = false;
 let popupNoise: HTMLAudioElement = new Audio('src/assets/popup.mp3')
 const timeout: number = 1000;
 const min_timer = 5;
@@ -16,7 +18,7 @@ const togglePlay = (audio: {
 function toggleLoading(): void {
   const load_logo = document.getElementById("load-cat");
   const dance_cat = document.getElementById("cat-container");
-  const refresh_btn = document.getElementById("refresh-btn");
+  const refresh_btn = document.getElementById("popup-btn");
   const loading_text = document.getElementById("loading-text");
   const title_message = document.getElementById("title-text");
   // const slots_audio = <HTMLAudioElement>document.getElementById("myAudio");
@@ -82,11 +84,6 @@ function toggleShake(element: HTMLElement | null) {
   console.log("Toggled element " + element.id);
 }
 
-// function closeDialog(element:HTMLDialogElement | null) {
-//   if (!element) return;
-//   element.close();
-// }
-
 function toggleBlock(): void {
   document.getElementById("main")?.classList.toggle("blocked");
 }
@@ -115,12 +112,19 @@ async function createPopup() {
     console.log("Popup window successfully created!");
     popupNoise.load()
     popupNoise.play();
+    popupActive = true;
     //play noises
     //focus window
   });
 
+  popup.once("tauri://close-requested", async () => {
+    await popup.destroy()
+    popupActive = false
+    toggleBlock()
+    restart_timer()
+  })
+
   popup.once("tauri://destroyed", async () => {
-    toggleBlock();
   });
 }
 
@@ -128,8 +132,6 @@ const newTimerValue = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const button = document.getElementById("refresh-btn");
-button?.addEventListener("click", () => restart_timer());
 
 const dialog1 = <HTMLDialogElement>document.getElementById("dialog1");
 
@@ -142,9 +144,14 @@ window.addEventListener("DOMContentLoaded", () => {
 document
   .getElementById("close-btn")
   ?.addEventListener("click", () => dialog1.close());
+
 document.getElementById("popup-btn")?.addEventListener("click", () => {
   createPopup();
   toggleBlock();
 });
 
 window.setInterval(incrementText, timeout);
+document.addEventListener("contextmenu", (e) => {
+  if (popupActive) e.preventDefault()
+
+});

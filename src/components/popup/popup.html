@@ -22,17 +22,21 @@
                 data-tauri-drag-region
             >
                 <header class="windows-bar" data-tauri-drag-region>
-                    <p class="header-text">Nu te cred :p</p>
+                    <p class="header-text" id="header-text">Nu te cred :p</p>
                     <button class="windows-close-btn" id="close-btn">✖</button>
                 </header>
                 <div class="windows-content">
                     <div class="body-header">
-                        <p class="growing-element body-text">Siiiigur i-ai dat mesaj?</p>
+                        <p class="growing-element body-text" id="body-text">Siiiiiigur ii dai mesaj?</p>
                         <img src="/src/assets/emoji.png" class="emoji-img" />
                     </div>
                     <div class="window-btn-container">
-                        <button class="growing-element window-btn">Daa</button>
-                        <button class="window-btn" id="wrong-btn">Nu...Cred</button>
+                        <a class="grow-shake window-btn hidden rainbow-glow " id="yes-btn" href="" target="_blank">
+                            <span>Daa</span>
+                        </a>
+                        <button class="window-btn hidden" id="wrong-btn">
+                            <span>Nu...Cred</span>
+                        </button>
                     </div>
                 </div>
             </div>
