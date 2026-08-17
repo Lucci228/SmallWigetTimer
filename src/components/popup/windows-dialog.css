@@ -180,10 +180,6 @@ span {
   opacity: 0.5;
 }
 
-.growing-element{
-    /*animation: growShrink 1s ease-in-out infinite alternate;
-    transform-origin: bottom left;*/
-}
 
 .growing-element.delayed {
     animation-delay: 2s;
