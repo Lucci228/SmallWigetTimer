@@ -1,4 +1,3 @@
-import { resolve } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 // ---- Assets ----
