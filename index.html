@@ -10,13 +10,36 @@
 
     <body>
         <main class="flex-container" id="main">
-            <div class="title-container header" id="title-container">
+            <header class="title-container header" id="title-container">
                 <img class="cat-logo" src="src-tauri/icons/128x128@2x.png" />
                 <h1 class="page-title" id="title-text">
                     Beb Moment in Progress
                 </h1>
-            </div>
-            <div class="body-container content">
+                <div class="header-btns">
+                    <button class="settings-btn" id="settings-btn" title="Set timer length">⚙</button>
+                    <button class="settings-btn" id="pause-btn" title="Pause timer"><img src="src/assets/pause.png"></button>
+                </div>
+
+            </header>
+            <div class="body-container content" id="body-main">
+                <dialog class="select-timer" id="timer-dialog">
+                    <h2 class="dialog-title">Choose timer length</h2>
+                    <div class="timer-options">
+                        <button class="timer-option-btn" data-length="short">
+                            <span class="option-label">Short</span>
+                            <span class="option-sub">10–20s</span>
+                        </button>
+                        <button class="timer-option-btn" data-length="medium">
+                            <span class="option-label">Medium</span>
+                            <span class="option-sub">1–2m</span>
+                        </button>
+                        <button class="timer-option-btn" data-length="long">
+                            <span class="option-label">Long</span>
+                            <span class="option-sub">1-2h</span>
+                        </button>
+                    </div>
+                    <button class="dialog-close-btn" id="dialog-cancel-btn">Cancel</button>
+                </dialog>
                 <div class="loading-cat" id="load-cat">
                     <div class="body"></div>
                     <div class="head">
@@ -37,6 +60,9 @@
                         id="dance-cat"
                         src="src/assets/cat-cute.gif"
                     />
+                </div>
+                <div class="sleep-cat-container hidden" id="sleep-cat">
+                    <img class="sleep-cat" src="src/assets/sleepy.gif"/>
                 </div>
                 <div class="loading-text">
                     <p id="loading-text"></p>

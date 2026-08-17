@@ -1,11 +1,15 @@
-
+@property --anim-speed {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 2.74s;
+}
 
   .loading-cat {
     position: relative;
     display: inline-block;
     width: 480px;
     height: 360px;
-    animation: 2.74s linear infinite loading-cat;
+    animation: var(--anim-speed) linear infinite loading-cat;
   }
 
 
@@ -250,8 +254,8 @@
     }
   }
   .loading-cat .body {
-    animation: 2.74s linear infinite body;
+    animation: var(--anim-speed) linear infinite body;
   }
   .loading-cat .foot {
-    animation: 2.74s linear infinite foot;
+    animation: var(--anim-speed) linear infinite foot;
   }

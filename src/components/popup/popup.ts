@@ -1,4 +1,3 @@
-import { resolve } from "@tauri-apps/api/path";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
 // ---- Assets ----
@@ -51,7 +50,7 @@ async function typeWriter(element: HTMLElement | null, speed = 100) {
 
 async function showElements(delay = 100) {
   const hiddenElem = document.querySelectorAll<HTMLElement>(".hidden");
-  for (const elem of hiddenElem) {
+  for (const elem of Array.from(hiddenElem)) {
     await new Promise(resolve => setTimeout(resolve, delay));
     elem.classList.toggle("hidden");
   }

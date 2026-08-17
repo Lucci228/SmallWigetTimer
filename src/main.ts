@@ -1,55 +1,133 @@
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import alarmUrl from './assets/alarm.mp3'
+import confettiUrl from './assets/confetti.mp3'
+import cicadaUrl from './assets/cicada.mp3'
+import bulbUrl from './assets/lightbulb.mp3'
 
 let globalCounter: number = 0;
 let randomTimer: number = 0;
-let timerReset: boolean = true;
+let timerLoading: boolean = true;
+let timerPaused: boolean = false;
 let popupActive: boolean = false;
-let closeRequest: boolean = false;
-let popupNoise: HTMLAudioElement = new Audio('src/assets/popup.mp3')
+
+
+let alarmNoise = new Audio(alarmUrl)
+alarmNoise.volume = 0.5
+let confettiNoise = new Audio(confettiUrl)
+let cicadaNoise = new Audio(cicadaUrl)
+cicadaNoise.volume = 0.05
+cicadaNoise.loop = true
+let bulbNoise = new Audio(bulbUrl)
+bulbNoise.volume = 0.2
+bulbNoise.loop = true
+
+
 const timeout: number = 1000;
-const min_timer = 5;
-const max_timer = 10;
-const togglePlay = (audio: {
-  paused: boolean;
-  play: () => void;
-  pause: () => void;
-}) => (audio.paused ? audio.play() : audio.pause());
+let min_timer = 5;
+let max_timer = 10;
+let timerId: number | null = null;
+let timerStartTime: number = 0;
+let remainingTime: number = 0;
 
-function toggleLoading(): void {
-  const load_logo = document.getElementById("load-cat");
-  const dance_cat = document.getElementById("cat-container");
-  const refresh_btn = document.getElementById("popup-btn");
-  const loading_text = document.getElementById("loading-text");
-  const title_message = document.getElementById("title-text");
-  // const slots_audio = <HTMLAudioElement>document.getElementById("myAudio");
-  // playAudio(slots_audio);
-  toggleVisibility(load_logo);
-  toggleVisibility(dance_cat);
-  toggleVisibility(refresh_btn);
-  toggleVisibility(loading_text);
+const load_logo = document.getElementById("load-cat");
+const dance_cat = document.getElementById("cat-container");
+const refresh_btn = document.getElementById("popup-btn");
+const loading_text = document.getElementById("loading-text");
+const title_message = document.getElementById("title-text");
+const sleep_cat = document.getElementById("sleep-cat")
+const body_cont = document.getElementById("body-main")
+const body_header = document.getElementById("title-container")
+
+
+function startLoading(): void {
+  showElement(load_logo);
+  hideElement(dance_cat);
+  hideElement(refresh_btn);
+  showElement(loading_text);
   refreshTitle();
-  toggleShake(title_message);
+  stopShake(title_message);
 }
 
-function playAudio(element: HTMLAudioElement | null) {
-  if (!element) return;
-  element.volume = 0.05;
-  togglePlay(element);
+function finishedLoading(): void {
+  timerLoading = false
+  if (timerPaused) return
+  alarmNoise.play()
+  hideElement(load_logo)
+  showElement(dance_cat)
+  showElement(refresh_btn)
+  hideElement(loading_text)
+  refreshTitle()
+  startShake(title_message)
 }
 
+function unpauseLoading() {
+  timerPaused = false
+  hideElement(sleep_cat)
+  cicadaNoise.pause()
+  bulbNoise.pause()
+  body_cont?.classList.remove("sleep-bg")
+  body_header?.classList.remove("sleep")
+  if (body_header) {
+    for (const child of Array.from(body_header.children)) {
+      child.classList.remove("sleep");
+    }
+  }
+  if (timerLoading) {
+      startLoading();
+      if (remainingTime > 0) {
+        runTimer(remainingTime);
+      } else {
+        finishedLoading();
+      }
+    } else {
+      finishedLoading();
+    }
+}
+
+async function playBackground() {
+  bulbNoise.play()
+  cicadaNoise.play()
+}
+
+async function pauseLoading(): Promise<void> {
+  timerPaused = true
+  alarmNoise.pause()
+  if (timerId !== null) {
+      window.clearTimeout(timerId);
+      timerId = null;
+      const elapsedTime = Date.now() - timerStartTime;
+    remainingTime = Math.max(0, remainingTime - elapsedTime);
+  }
+  body_cont?.classList.add("sleep-bg")
+  body_header?.classList.add("sleep")
+  if (body_header) {
+    for (const child of Array.from(body_header.children)) {
+      child.classList.add("sleep");
+    }
+  }
+  hideElement(load_logo)
+  hideElement(dance_cat)
+  hideElement(refresh_btn)
+  hideElement(loading_text)
+  showElement(sleep_cat)
+  stopShake(title_message)
+  refreshTitle()
+  await playBackground()
+}
 
 
 function refreshTitle(): void {
   const title_container = document.getElementById("title-text");
   if (title_container) {
-    if (timerReset) title_container.innerText = "Beb Moments in Progress";
+    if (timerPaused) title_container.innerText = "Beb Moments Paused Zzz..."
+    else if (timerLoading) title_container.innerText = "Beb Moments in Progress";
     else title_container.innerText = "Dai mesaj lui BEB!!!!";
   }
 }
 
 function restart_timer(): void {
-  timerReset = true;
-  toggleLoading();
+  timerLoading = true;
+  startLoading();
   startTimer();
 }
 
@@ -62,31 +140,53 @@ function incrementText(): void {
   textContainer.innerHTML = baseText + ".".repeat(globalCounter);
 }
 
-function danceCat(): void {
-  timerReset = false;
-  toggleLoading();
-}
-
 function startTimer(): void {
+  if (timerId !== null) {
+      window.clearTimeout(timerId);
+      timerId = null;
+  }
   randomTimer = newTimerValue(min_timer, max_timer) * 1000;
-  window.setTimeout(danceCat, randomTimer);
+  remainingTime = randomTimer;
+  runTimer(remainingTime)
 }
 
-function toggleVisibility(element: HTMLElement | null) {
+function runTimer(duration: number): void {
+  timerStartTime = Date.now();
+  timerId = window.setTimeout(() => {
+    timerId = null;
+    finishedLoading();
+  }, duration);
+}
+
+function hideElement(element: HTMLElement | null) {
   if (!element) return;
-  element.classList.toggle("hidden");
+  element.classList.add("hidden");
   console.log("Toggled element " + element.id);
 }
 
-function toggleShake(element: HTMLElement | null) {
+function showElement(element: HTMLElement | null) {
   if (!element) return;
-  element.classList.toggle("shake-element");
+  element.classList.remove("hidden");
+  console.log("Toggled element " + element.id);
+}
+
+
+function startShake(element: HTMLElement | null) {
+  if (!element) return;
+  element.classList.add("shake-element");
+  console.log("Toggled element " + element.id);
+}
+
+function stopShake(element: HTMLElement | null) {
+  if (!element) return;
+  element.classList.remove("shake-element");
   console.log("Toggled element " + element.id);
 }
 
 function toggleBlock(): void {
   document.getElementById("main")?.classList.toggle("blocked");
 }
+
 
 async function createPopup() {
   console.log("Invoked function createPopup");
@@ -110,8 +210,7 @@ async function createPopup() {
   // Listen for window creation success
   popup.once("tauri://created", () => {
     console.log("Popup window successfully created!");
-    popupNoise.load()
-    popupNoise.play();
+    confettiNoise.play()
     popupActive = true;
     //play noises
     //focus window
@@ -146,6 +245,7 @@ document
   ?.addEventListener("click", () => dialog1.close());
 
 document.getElementById("popup-btn")?.addEventListener("click", () => {
+  alarmNoise.pause()
   createPopup();
   toggleBlock();
 });
@@ -154,4 +254,39 @@ window.setInterval(incrementText, timeout);
 document.addEventListener("contextmenu", (e) => {
   if (popupActive) e.preventDefault()
 
+});
+
+const timerDialog = <HTMLDialogElement>document.getElementById("timer-dialog");
+
+const timerPresets: Record<string, { min: number; max: number, anim_speed:string }> = {
+  short: { min: 10, max: 20, anim_speed: "1.74s" },
+  medium: { min: 60, max: 120, anim_speed: "2.74s" },
+  long: { min: 3600, max: 7200, anim_speed: "3.74s" },
+};
+
+document.getElementById("settings-btn")?.addEventListener("click", () => {
+  timerDialog.showModal();
+});
+
+document.getElementById("pause-btn")?.addEventListener("click", () => {
+  if (timerPaused) unpauseLoading()
+  else pauseLoading()
+})
+
+document.getElementById("dialog-cancel-btn")?.addEventListener("click", () => {
+  timerDialog.close();
+});
+
+document.querySelectorAll<HTMLButtonElement>(".timer-option-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const length = btn.dataset.length;
+    if (length && timerPresets[length]) {
+      min_timer = timerPresets[length].min;
+      max_timer = timerPresets[length].max;
+      document.documentElement.style.setProperty('--anim-speed', timerPresets[length].anim_speed);
+      console.log(`Timer set to ${length}: ${min_timer}-${max_timer}s`);
+      if (timerLoading) restart_timer()
+    }
+    timerDialog.close();
+  });
 });
