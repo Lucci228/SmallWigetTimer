@@ -68,7 +68,7 @@ function unpauseLoading() {
   body_cont?.classList.remove("sleep-bg")
   body_header?.classList.remove("sleep")
   if (body_header) {
-    for (const child of body_header.children) {
+    for (const child of Array.from(body_header.children)) {
       child.classList.remove("sleep");
     }
   }
@@ -101,7 +101,7 @@ async function pauseLoading(): Promise<void> {
   body_cont?.classList.add("sleep-bg")
   body_header?.classList.add("sleep")
   if (body_header) {
-    for (const child of body_header.children) {
+    for (const child of Array.from(body_header.children)) {
       child.classList.add("sleep");
     }
   }
@@ -258,10 +258,10 @@ document.addEventListener("contextmenu", (e) => {
 
 const timerDialog = <HTMLDialogElement>document.getElementById("timer-dialog");
 
-const timerPresets: Record<string, { min: number; max: number }> = {
-  short: { min: 10, max: 20 },
-  medium: { min: 60, max: 120 },
-  long: { min: 3600, max: 7200 },
+const timerPresets: Record<string, { min: number; max: number, anim_speed:string }> = {
+  short: { min: 10, max: 20, anim_speed: "1.74s" },
+  medium: { min: 60, max: 120, anim_speed: "2.74s" },
+  long: { min: 3600, max: 7200, anim_speed: "3.74s" },
 };
 
 document.getElementById("settings-btn")?.addEventListener("click", () => {
@@ -283,7 +283,9 @@ document.querySelectorAll<HTMLButtonElement>(".timer-option-btn").forEach((btn) 
     if (length && timerPresets[length]) {
       min_timer = timerPresets[length].min;
       max_timer = timerPresets[length].max;
+      document.documentElement.style.setProperty('--anim-speed', timerPresets[length].anim_speed);
       console.log(`Timer set to ${length}: ${min_timer}-${max_timer}s`);
+      if (timerLoading) restart_timer()
     }
     timerDialog.close();
   });
