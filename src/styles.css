@@ -25,13 +25,7 @@
 
 @keyframes spin {  to {--a: 360deg;  } }
 
-.glow-bg {
-    display: inline-block;
-    padding: 2px;
-    border-radius: 16px;
-    background: conic-gradient(from var(--a), red, blueviolet, red);
-    animation: spin 3s linear infinite;
-}
+
 
 .btn {
     width: 100px;
@@ -361,7 +355,7 @@ dialog.select-timer::backdrop {
 
 .dialog-close-btn {
     margin-top: 16px;
-    background: #e4dcf5;
+    background: #f0cf9c;
     border: none;
     border-top: 1px solid #a09aac ;
     border-left: 1px solid #a09aac;
@@ -373,9 +367,54 @@ dialog.select-timer::backdrop {
 }
 
 .dialog-close-btn:hover {
-    background: #a09aac;
+    background: #c0a67d;
     border: none;
 }
+
+#dialog-gamble-btn {
+    width: 100px;
+    height: 50px;
+    font-weight: 800;
+    font-size: 1em;
+    margin-top: 0;
+    border: 0;
+    border-radius: 16px;
+}
+
+.glow-bg {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 16px;
+    background: conic-gradient(
+      from var(--a),
+      #8a6a3a 0deg,
+      #f0cf9c 45deg,
+      #8a6a3a 90deg,
+      transparent 180deg,
+      #8a6a3a 270deg,
+      #f0cf9c 315deg,
+      #8a6a3a 360deg
+    );
+    animation: spin 3s linear infinite;
+}
+
+.glow-bg:hover {
+    background: none;
+    animation: spin 1s linear infinite, shake 2s infinite;
+    background: conic-gradient(
+      from var(--a),
+      #ff003c 0deg,
+      #ff8a00 51deg,
+      #ffee00 102deg,
+      #4dff00 153deg,
+      transparent 180deg,
+      #00e5ff 227deg,
+      #2b6bff 278deg,
+      #a600ff 329deg,
+      #ff003c 360deg
+    );
+}
+
 
 .sleep-bg  {
     background-color: #362a69 !important;
@@ -411,11 +450,12 @@ dialog.select-timer::backdrop {
 }
 
 @keyframes shake {
-    35% { transform: scale(1.2) translate(-4px, 2px) rotate(-6deg); }
-    42% { transform: scale(1.2) translate(4px, -2px) rotate(6deg); }
-    49% { transform: scale(1.2) translate(-4px, -1px) rotate(-6deg); }
-    56% { transform: scale(1.2) translate(4px, 1px) rotate(6deg); }
-    63% { transform: scale(1.2) translate(-3px, 2px) rotate(-4deg); }
-    70% { transform: scale(1.2) translate(3px, -1px) rotate(4deg); }
-    75% { transform: scale(1.2) translate(0, 0) rotate(0deg); }
+    5% { transform: scale(1.2) translate(-4px, 2px) rotate(-6deg); }
+    12% { transform: scale(1.2) translate(4px, -2px) rotate(6deg); }
+    19% { transform: scale(1.2) translate(-4px, -1px) rotate(-6deg); }
+    26% { transform: scale(1.2) translate(4px, 1px) rotate(6deg); }
+    33% { transform: scale(1.2) translate(-3px, 2px) rotate(-4deg); }
+    50% { transform: scale(1.2) translate(3px, -1px) rotate(4deg); }
+    55% { transform: scale(1.2) translate(0, 0) rotate(0deg); }
+    100% {transform: translate(0, 0);}
 }

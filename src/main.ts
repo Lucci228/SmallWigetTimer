@@ -136,7 +136,7 @@ const timerSlots = document.querySelectorAll<HTMLElement>(".gamble-text")
 async function playAnimation(element: HTMLElement, triggerClass: string) {
   element.classList.add(triggerClass);
 
-  element.style.animationDuration = `${randomValue(0.6, 1.5)}s`
+  element.style.animationDuration = `${randomValue(0.6, 1)}s`
   element.style.animationDelay = `${randomValue(0, 0.3)}s`
   element.style.animationIterationCount = `${randomIntValue(5, 10)}`
   const animations = element.getAnimations();
