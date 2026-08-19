@@ -6,6 +6,7 @@ import bulbUrl from "./assets/lightbulb.mp3";
 import rollUrl from "./assets/pacanea-roll.mp3";
 import rollDoneUrl from "./assets/pacanea-done.mp3";
 import rollWinUrl from "./assets/pacanea-win.mp3";
+import errorUrl from "./assets/popup.mp3"
 import { event } from "@tauri-apps/api";
 
 /* ------------------------------------------------------------------ */
@@ -30,20 +31,8 @@ const ANIM = {
   dampingFactor: 0.3, // lower = slower change, 1 = original behaviour, 0 = no change
 };
 
-const BASE_TIMER_TIME_MS = 60 * 1000;
+const BASE_TIMER_TIME_MS = 600 * 1000;
 
-const TIMER_PRESETS: Record<string, TimerPreset> = {
-  short: { timerTime: 1, anim_speed: 1.74 },
-  medium: { timerTime: 60, anim_speed: 2.74 },
-  long: { timerTime: 200, anim_speed: 3.74 },
-};
-
-/**
- * NOTE: these were present in the original file but not referenced by
- * any active code path (no callers of `newTimerValue`, `randomTimer` is
- * only logged once). Kept here, isolated, in case something still
- * depends on them; safe to delete if confirmed unused.
- */
 const LEGACY_UNUSED = {
   minTimer: 5,
   maxTimer: 10,
@@ -56,10 +45,10 @@ interface TimerState {
   second: number;
 }
 
-const targetTime: TimerState = { hour: 0, minute: 0, second: 1 };
+const targetTime: TimerState = { hour: 0, minute: 0, second: 0 };
 
 function computeTime() {
-  state.remainingTime = targetTime.hour * 60 * 60 * 1000 + targetTime.minute * 60 * 1000 + targetTime.second * 1000;
+  state.currTimerTime = targetTime.hour * 60 * 60 * 1000 + targetTime.minute * 60 * 1000 + targetTime.second * 1000;
 }
 
 function generateRandomTarget(): void {
@@ -82,6 +71,7 @@ function randomIntValue(min: number, max: number): number {
 
 const state = {
   loadingDotCount: 0,
+  timerSet: false,
   timerLoading: true,
   timerPaused: false,
   popupActive: false,
@@ -104,7 +94,8 @@ const sounds = {
   bulb: new Audio(bulbUrl),
   roll: new Audio(rollUrl),
   spinDone: new Audio(rollDoneUrl),
-  spinWin: new Audio(rollWinUrl)
+  spinWin: new Audio(rollWinUrl),
+  error: new Audio(errorUrl)
 };
 
 sounds.alarm.volume = 0.5;
@@ -136,7 +127,6 @@ const dom = {
 };
 
 const timerDialog = document.getElementById("timer-dialog") as HTMLDialogElement;
-const dialog1 = document.getElementById("dialog1") as HTMLDialogElement;
 const timerSlots = document.querySelectorAll<HTMLElement>(".gamble-text")
 
 
@@ -233,6 +223,13 @@ function playRoll() {
 /*  Animation                                                          */
 /* ------------------------------------------------------------------ */
 
+function playShake(element: HTMLElement | null) {
+  if (!element) return
+  element.classList.remove("shake");
+  void element.offsetWidth;
+  element.classList.add("shake");
+}
+
 function getScaledAnimTime(): number {
   let ratio = state.currTimerTime / BASE_TIMER_TIME_MS;
   ratio = 1 + (ratio - 1) * ANIM.dampingFactor;
@@ -278,6 +275,7 @@ function startTimer(): void {
     state.timerId = null;
   }
   state.remainingTime = state.currTimerTime;
+  setAnimTime()
   runTimer(state.remainingTime);
 }
 
@@ -426,6 +424,7 @@ async function createPopup(): Promise<void> {
   popup.once("tauri://close-requested", async () => {
     await popup.destroy();
     state.popupActive = false;
+    state.timerSet = false;
     toggleBlock();
     startLoading();
     startPage();
@@ -467,17 +466,12 @@ function initEventListeners(): void {
   window.addEventListener("DOMContentLoaded", () => {
     setAnimTime(0);
     timerDialog.showModal();
-    console.log("Timer is " + LEGACY_UNUSED.randomTimer);
     addSlotIterEvent(dom.secondSlot, 1, 59)
     addSlotIterEvent(dom.minuteSlot, 0, 59)
     addSlotIterEvent(dom.hourSlot, 0, 2)
     addSlotFinishHandler(dom.hourSlot, targetTime, "hour");
     addSlotFinishHandler(dom.minuteSlot, targetTime, "minute");
     addSlotFinishHandler(dom.secondSlot, targetTime, "second");
-  });
-
-  document.getElementById("close-btn")?.addEventListener("click", () => {
-    dialog1.close();
   });
 
   document.getElementById("popup-btn")?.addEventListener("click", () => {
@@ -487,8 +481,33 @@ function initEventListeners(): void {
   });
 
   dom.gambleBtn?.addEventListener("click", () => {
+    state.timerSet = true;
     playSlots()
   })
+
+  document.getElementById("dialog-cancel-btn")?.addEventListener("click", (e) => {
+    if (!state.timerSet) {
+      playShake(document.getElementById("dialog-title"))
+      sounds.error.currentTime = 0
+      sounds.error.play()
+      return
+    }
+    unpauseTimer();
+    timerDialog.close();
+  });
+
+  document.getElementById("dialog-confirm-btn")?.addEventListener("click", () => {
+    if (!state.timerSet) {
+      playShake(document.getElementById("dialog-title"))
+      sounds.error.currentTime = 0
+      sounds.error.play()
+      return
+    }
+    computeTime();
+    restartTimer();
+    unpauseTimer();
+    timerDialog.close();
+  });
 
   document.addEventListener("contextmenu", (e) => {
     if (state.popupActive) e.preventDefault();
@@ -503,24 +522,6 @@ function initEventListeners(): void {
   document.getElementById("pause-btn")?.addEventListener("click", () => {
     if (state.timerPaused) unpauseLoading();
     else pauseLoading();
-  });
-
-  document.getElementById("dialog-cancel-btn")?.addEventListener("click", () => {
-    unpauseTimer();
-    timerDialog.close();
-  });
-
-  document.querySelectorAll<HTMLButtonElement>(".timer-option-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const length = btn.dataset.length;
-      if (length && TIMER_PRESETS[length]) {
-        state.currTimerTime = TIMER_PRESETS[length].timerTime * 1000;
-        setAnimTime();
-        restartTimer();
-      }
-      unpauseTimer();
-      timerDialog.close();
-    });
   });
 
   window.setInterval(incrementLoadingText, TICK_INTERVAL_MS);

@@ -64,6 +64,7 @@ body {
 .flex-container .header{
   flex: 0 1 auto;
 }
+
 .flex-container .content{
   flex: 1 1 auto;
 }
@@ -75,6 +76,7 @@ body {
   background-color: #ffc1b2;
   display: flex;
   justify-content: center;
+  height: 510px;
 }
 
 .timer-cat {
@@ -134,10 +136,12 @@ body {
 .title-container {
   background-color: #FFF2DF;
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  width: 750px;
-  padding: 1.25rem 2rem;
+  width: 100vw;
+  height: 90px;
+  /*padding: 1.25rem 2rem;*/
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   border:2px 3px 2px solid #ffc1b2;
 }
@@ -229,6 +233,7 @@ body {
 }
 
 dialog.select-timer {
+    overflow: hidden;
     background-image: url("assets/dialog_bg.jfif");
     background-size: cover;
     background-position: center;
@@ -376,6 +381,11 @@ dialog.select-timer::backdrop {
     background-color: #362a69 !important;
 }
 
+.shake {
+    animation: shake 0.5s ease-in;
+    transform-origin: center center;
+}
+
 @keyframes gamble-spin {
     /* --- FIRST FULL SPIN --- */
     0% {
@@ -398,4 +408,14 @@ dialog.select-timer::backdrop {
 @keyframes  gamble-spin-2 {
     0% {translate: 0px -80%;}
     100% {translate: 0px 0px;}
+}
+
+@keyframes shake {
+    35% { transform: scale(1.2) translate(-4px, 2px) rotate(-6deg); }
+    42% { transform: scale(1.2) translate(4px, -2px) rotate(6deg); }
+    49% { transform: scale(1.2) translate(-4px, -1px) rotate(-6deg); }
+    56% { transform: scale(1.2) translate(4px, 1px) rotate(6deg); }
+    63% { transform: scale(1.2) translate(-3px, 2px) rotate(-4deg); }
+    70% { transform: scale(1.2) translate(3px, -1px) rotate(4deg); }
+    75% { transform: scale(1.2) translate(0, 0) rotate(0deg); }
 }
