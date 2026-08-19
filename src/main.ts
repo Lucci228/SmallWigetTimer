@@ -3,6 +3,10 @@ import alarmUrl from "./assets/alarm.mp3";
 import confettiUrl from "./assets/confetti.mp3";
 import cicadaUrl from "./assets/cicada.mp3";
 import bulbUrl from "./assets/lightbulb.mp3";
+import rollUrl from "./assets/pacanea-roll.mp3";
+import rollDoneUrl from "./assets/pacanea-done.mp3";
+import rollWinUrl from "./assets/pacanea-win.mp3";
+import { event } from "@tauri-apps/api";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -46,8 +50,30 @@ const LEGACY_UNUSED = {
   randomTimer: 0,
 };
 
-function newTimerValue(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min)) + min;
+interface TimerState {
+  hour: number;
+  minute: number;
+  second: number;
+}
+
+const targetTime: TimerState = { hour: 0, minute: 0, second: 1 };
+
+function computeTime() {
+  state.remainingTime = targetTime.hour * 60 * 60 * 1000 + targetTime.minute * 60 * 1000 + targetTime.second * 1000;
+}
+
+function generateRandomTarget(): void {
+  targetTime.hour = randomIntValue(0, 1);
+  targetTime.minute = randomIntValue(0, 59);
+  targetTime.second = randomIntValue(1, 59);
+}
+
+function randomValue(min: number, max: number): number {
+  return Math.random() * (max - min) + min;
+}
+
+function randomIntValue(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /* ------------------------------------------------------------------ */
@@ -76,6 +102,9 @@ const sounds = {
   confetti: new Audio(confettiUrl),
   cicada: new Audio(cicadaUrl),
   bulb: new Audio(bulbUrl),
+  roll: new Audio(rollUrl),
+  spinDone: new Audio(rollDoneUrl),
+  spinWin: new Audio(rollWinUrl)
 };
 
 sounds.alarm.volume = 0.5;
@@ -99,14 +128,57 @@ const dom = {
   sleepCat: document.getElementById("sleep-cat"),
   bodyMain: document.getElementById("body-main"),
   titleContainer: document.getElementById("title-container"),
+  gambleBtn: document.getElementById("dialog-gamble-btn"),
+  secondSlot: document.getElementById("gamble-second"),
+  minuteSlot: document.getElementById("gamble-minute"),
+  hourSlot: document.getElementById("gamble-hour"),
+
 };
 
 const timerDialog = document.getElementById("timer-dialog") as HTMLDialogElement;
 const dialog1 = document.getElementById("dialog1") as HTMLDialogElement;
+const timerSlots = document.querySelectorAll<HTMLElement>(".gamble-text")
+
 
 /* ------------------------------------------------------------------ */
 /*  DOM Helpers                                                        */
 /* ------------------------------------------------------------------ */
+async function playAnimation(element: HTMLElement, triggerClass: string) {
+  element.classList.add(triggerClass);
+
+  element.style.animationDuration = `${randomValue(0.6, 1.5)}s`
+  element.style.animationDelay = `${randomValue(0, 0.3)}s`
+  element.style.animationIterationCount = `${randomIntValue(5, 10)}`
+  const animations = element.getAnimations();
+  try {
+    await Promise.all(animations.map(anim => anim.finished));
+    console.log('All animations finished!');
+    element.style.animationIterationCount = `1`
+    element.style.animationDelay = `0s`
+    element.classList.add('finish');
+
+    const finishAnimations = element.getAnimations();
+    await Promise.all(finishAnimations.map(anim => anim.finished));
+
+    console.log('Finish animation done!');
+    sounds.spinDone.play();
+
+  } catch {
+    console.log('An animation was cancelled before finishing');
+  }
+}
+
+async function playSlots() {
+  generateRandomTarget()
+  console.log(`New timer generated ${targetTime.hour}h ${targetTime.minute}m ${targetTime.second}s`)
+  timerSlots.forEach((elem) => elem.classList.remove("finish"))
+  const promises = Array.from(timerSlots).map(slot =>
+    playAnimation(slot, "spin")
+  );
+
+  await Promise.all(promises);
+  sounds.spinWin.play();
+}
 
 function hideElement(element: HTMLElement | null): void {
   if (!element) return;
@@ -134,6 +206,27 @@ function stopShake(element: HTMLElement | null): void {
 
 function toggleBlock(): void {
   document.getElementById("main")?.classList.toggle("blocked");
+}
+
+/* ------------------------------------------------------------------ */
+/*  Low Latency Audio                                                  */
+/* ------------------------------------------------------------------ */
+
+const audioCtx = new AudioContext();
+let rollBuffer: AudioBuffer;
+
+
+async function loadSound(url: string) {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  rollBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+}
+
+function playRoll() {
+  const source = audioCtx.createBufferSource();
+  source.buffer = rollBuffer;
+  source.connect(audioCtx.destination);
+  source.start(0);
 }
 
 /* ------------------------------------------------------------------ */
@@ -350,11 +443,37 @@ function startPage(): void {
 /*  Event Wiring                                                       */
 /* ------------------------------------------------------------------ */
 
+function addSlotIterEvent(element: HTMLElement | null, min_val: number, max_val: number): void {
+  if (!element) return
+  element.addEventListener("animationiteration", (event: AnimationEvent) => {
+    if (event.animationName === "gamble-spin") {
+      playRoll()
+      element.innerText = randomIntValue(min_val, max_val).toString();
+    }
+  })
+}
+
+function addSlotFinishHandler(element: HTMLElement | null, state: TimerState, key: keyof TimerState) {
+  if (element === null)  return
+  element.addEventListener("animationend", (event: AnimationEvent) => {
+    if (event.animationName !== "finish")
+      element.textContent = state[key].toString();
+  });
+}
+
 function initEventListeners(): void {
+  window.addEventListener("load", () => loadSound(rollUrl))
+
   window.addEventListener("DOMContentLoaded", () => {
     setAnimTime(0);
     timerDialog.showModal();
     console.log("Timer is " + LEGACY_UNUSED.randomTimer);
+    addSlotIterEvent(dom.secondSlot, 1, 59)
+    addSlotIterEvent(dom.minuteSlot, 0, 59)
+    addSlotIterEvent(dom.hourSlot, 0, 2)
+    addSlotFinishHandler(dom.hourSlot, targetTime, "hour");
+    addSlotFinishHandler(dom.minuteSlot, targetTime, "minute");
+    addSlotFinishHandler(dom.secondSlot, targetTime, "second");
   });
 
   document.getElementById("close-btn")?.addEventListener("click", () => {
@@ -367,13 +486,18 @@ function initEventListeners(): void {
     toggleBlock();
   });
 
+  dom.gambleBtn?.addEventListener("click", () => {
+    playSlots()
+  })
+
   document.addEventListener("contextmenu", (e) => {
     if (state.popupActive) e.preventDefault();
   });
 
   document.getElementById("settings-btn")?.addEventListener("click", () => {
     pauseTimer();
-    timerDialog.showModal();
+    timerDialog.showModal()
+    playSlots()
   });
 
   document.getElementById("pause-btn")?.addEventListener("click", () => {

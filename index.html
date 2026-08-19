@@ -25,20 +25,34 @@
                 <dialog class="select-timer" id="timer-dialog">
                     <h2 class="dialog-title">Choose timer length</h2>
                     <div class="timer-options">
-                        <button class="timer-option-btn" data-length="short">
-                            <span class="option-label">Short</span>
-                            <span class="option-sub">10–20s</span>
-                        </button>
-                        <button class="timer-option-btn" data-length="medium">
-                            <span class="option-label">Medium</span>
-                            <span class="option-sub">1–2m</span>
-                        </button>
-                        <button class="timer-option-btn" data-length="long">
-                            <span class="option-label">Long</span>
-                            <span class="option-sub">1-2h</span>
-                        </button>
+                        <div class = "timer-options-content">
+                            <div class = "gamble-card">
+                                 <div class="gamble-header-text">Hours</div>
+                                 <div class = "timer-gamble-slot">
+                                     <div class = "gamble-text" id="gamble-hour">0</div>
+                                 </div>
+                            </div>
+                            <div class="gamble-separator">:</div>
+                            <div class = "gamble-card">
+                                 <div class="gamble-header-text">Minutes</div>
+                                 <div class = "timer-gamble-slot">
+                                     <div class = "gamble-text" id="gamble-minute">0</div>
+                                 </div>
+                            </div>
+                            <div class="gamble-separator">:</div>
+                            <div class = "gamble-card">
+                                 <div class="gamble-header-text">Seconds</div>
+                                 <div class = "timer-gamble-slot">
+                                     <div class = "gamble-text" id="gamble-second">1</div>
+                                 </div>
+                            </div>
+                        </div>
                     </div>
-                    <button class="dialog-close-btn" id="dialog-cancel-btn">Cancel</button>
+                    <div class = "dialog-timer-container">
+                        <button class="dialog-close-btn" id="dialog-gamble-btn">Gamble</button>
+                        <button class="dialog-close-btn" id="dialog-confirm-btn">Confirm</button>
+                        <button class="dialog-close-btn" id="dialog-cancel-btn">Cancel</button>
+                    </div>
                 </dialog>
                 <div class="loading-cat" id="load-cat">
                     <div class="body"></div>
