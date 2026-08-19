@@ -392,8 +392,9 @@ function initEventListeners(): void {
       if (length && TIMER_PRESETS[length]) {
         state.currTimerTime = TIMER_PRESETS[length].timerTime * 1000;
         setAnimTime();
-        if (state.timerLoading) restartTimer();
+        restartTimer();
       }
+      unpauseTimer();
       timerDialog.close();
     });
   });
