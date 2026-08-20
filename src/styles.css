@@ -275,7 +275,8 @@ dialog.select-timer::backdrop {
 .gamble-card {
     margin: auto 0px;
     margin-top: 2rem;
-    overflow: hidden;
+    overflow: visible;
+
 }
 
 
@@ -318,6 +319,7 @@ dialog.select-timer::backdrop {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    z-index: -2;
 }
 
 .timer-option-btn {
@@ -413,6 +415,43 @@ dialog.select-timer::backdrop {
       #a600ff 329deg,
       #ff003c 360deg
     );
+}
+
+.slot-outline {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 10px;
+}
+
+.slot-outline:has(.spin) {
+    animation: spin 1s linear infinite;
+    background: conic-gradient(
+      from var(--a),
+      #ff003c 0deg,
+      #ff8a00 51deg,
+      #ffee00 102deg,
+      #4dff00 153deg,
+      transparent 180deg,
+      #00e5ff 227deg,
+      #2b6bff 278deg,
+      #a600ff 329deg,
+      #ff003c 360deg
+    );
+}
+
+.slot-outline:has(.finish) {
+    animation: 5s spin 1s linear infinite, 1s shake 1s linear 1;
+    background: conic-gradient(
+      from var(--a),
+      #8a6a3a 0deg,
+      #f0cf9c 45deg,
+      #8a6a3a 90deg,
+      transparent 180deg,
+      #8a6a3a 270deg,
+      #f0cf9c 315deg,
+      #8a6a3a 360deg
+    );
+    z-index: 5;
 }
 
 

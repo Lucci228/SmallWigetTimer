@@ -7,16 +7,7 @@ import rollUrl from "./assets/pacanea-roll.mp3";
 import rollDoneUrl from "./assets/pacanea-done.mp3";
 import rollWinUrl from "./assets/pacanea-win.mp3";
 import errorUrl from "./assets/popup.mp3"
-import { event } from "@tauri-apps/api";
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
-
-interface TimerPreset {
-  timerTime: number; // seconds
-  anim_speed: number; // seconds
-}
 
 /* ------------------------------------------------------------------ */
 /*  Constants / Config                                                 */
@@ -33,11 +24,6 @@ const ANIM = {
 
 const BASE_TIMER_TIME_MS = 600 * 1000;
 
-const LEGACY_UNUSED = {
-  minTimer: 5,
-  maxTimer: 10,
-  randomTimer: 0,
-};
 
 interface TimerState {
   hour: number;
@@ -142,6 +128,7 @@ async function playAnimation(element: HTMLElement, triggerClass: string) {
   const animations = element.getAnimations();
   try {
     await Promise.all(animations.map(anim => anim.finished));
+    element.classList.remove(triggerClass)
     console.log('All animations finished!');
     element.style.animationIterationCount = `1`
     element.style.animationDelay = `0s`
@@ -485,7 +472,7 @@ function initEventListeners(): void {
     playSlots()
   })
 
-  document.getElementById("dialog-cancel-btn")?.addEventListener("click", (e) => {
+  document.getElementById("dialog-cancel-btn")?.addEventListener("click", () => {
     if (!state.timerSet) {
       playShake(document.getElementById("dialog-title"))
       sounds.error.currentTime = 0
