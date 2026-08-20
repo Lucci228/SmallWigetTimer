@@ -62,6 +62,7 @@ const state = {
   timerLoading: true,
   timerPaused: false,
   popupActive: false,
+  screenPaused: false,
 
   currTimerTime: BASE_TIMER_TIME_MS,
 
@@ -386,6 +387,7 @@ async function playBackground(): Promise<void> {
 }
 
 async function pauseLoading(): Promise<void> {
+  state.screenPaused = true
   pauseTimer();
   setSleepModeClasses(true);
 
@@ -401,6 +403,7 @@ async function pauseLoading(): Promise<void> {
 }
 
 function unpauseLoading(): void {
+  state.screenPaused = false
   hideElement(dom.sleepCat);
   sounds.cicada.pause();
   sounds.bulb.pause();
@@ -523,6 +526,7 @@ function initEventListeners(): void {
     }
     computeTime();
     state.timerSet = true
+    if (state.screenPaused) unpauseLoading()
     restartTimer();
     unpauseTimer();
     timerDialog.close();

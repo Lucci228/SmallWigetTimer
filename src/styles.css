@@ -469,6 +469,11 @@ dialog.select-timer:has(.spin) {
     animation: 5s spin 1s linear infinite, shake 0.8s linear;
 }
 
+.shake {
+   animation:  shake 0.8s ease-in;
+   transform-origin: center center;
+}
+
 .sleep-bg  {
     background-color: #362a69 !important;
 }
