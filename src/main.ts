@@ -115,6 +115,7 @@ const dom = {
 
 const timerDialog = document.getElementById("timer-dialog") as HTMLDialogElement;
 const timerSlots = document.querySelectorAll<HTMLElement>(".gamble-text")
+const timerSlotDivs = document.querySelectorAll<HTMLElement>(".slot-outline")
 
 
 /* ------------------------------------------------------------------ */
@@ -146,15 +147,33 @@ async function playAnimation(element: HTMLElement, triggerClass: string) {
   }
 }
 
+async function playAnimationOnce(element: HTMLElement, triggerClass: string) {
+  element.classList.add(triggerClass);
+
+  const animations = element.getAnimations();
+  if (animations.length === 0) {
+    console.warn(`No active animation found for class .${triggerClass}`);
+    element.classList.remove(triggerClass);
+    return;
+  }
+  try {
+    await Promise.all(animations.map((anim) => anim.finished));
+    element.classList.remove(triggerClass)
+  } catch (err) {
+    console.log("Animation cancelled:", err);
+  }
+}
+
 async function playSlots() {
   generateRandomTarget()
   console.log(`New timer generated ${targetTime.hour}h ${targetTime.minute}m ${targetTime.second}s`)
   timerSlots.forEach((elem) => elem.classList.remove("finish"))
+  timerSlotDivs.forEach((elem) => elem.classList.remove("shake"))
   const promises = Array.from(timerSlots).map(slot =>
     playAnimation(slot, "spin")
   );
-
   await Promise.all(promises);
+  timerSlotDivs.forEach((elem) => playAnimationOnce(elem, "shake"))
   sounds.spinWin.play();
 }
 
@@ -467,7 +486,7 @@ function initEventListeners(): void {
     timerDialog.showModal();
     addSlotIterEvent(dom.secondSlot, 1, 59)
     addSlotIterEvent(dom.minuteSlot, 0, 59)
-    addSlotIterEvent(dom.hourSlot, 0, 2)
+    addSlotIterEvent(dom.hourSlot, 0, 5)
     addSlotFinishHandler(dom.hourSlot, targetTime, "hour");
     addSlotFinishHandler(dom.minuteSlot, targetTime, "minute");
     addSlotFinishHandler(dom.secondSlot, targetTime, "second");

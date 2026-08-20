@@ -451,7 +451,7 @@ dialog.select-timer:has(.spin) {
 }
 
 .slot-outline:has(.finish) {
-    animation: 5s spin 1s linear infinite, 1s shake 1s linear 1;
+    animation: 5s spin 1s linear infinite;
     background: conic-gradient(
       from var(--a),
       #8a6a3a 0deg,
@@ -465,14 +465,12 @@ dialog.select-timer:has(.spin) {
     z-index: 5;
 }
 
+.slot-outline:has(.finish).shake {
+    animation: 5s spin 1s linear infinite, shake 0.8s linear;
+}
 
 .sleep-bg  {
     background-color: #362a69 !important;
-}
-
-.shake {
-    animation: shake 0.5s ease-in;
-    transform-origin: center center;
 }
 
 @keyframes gamble-spin {
