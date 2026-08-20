@@ -57,6 +57,7 @@ function randomIntValue(min: number, max: number): number {
 
 const state = {
   loadingDotCount: 0,
+  timerRolled: false,
   timerSet: false,
   timerLoading: true,
   timerPaused: false,
@@ -122,9 +123,9 @@ const timerSlots = document.querySelectorAll<HTMLElement>(".gamble-text")
 async function playAnimation(element: HTMLElement, triggerClass: string) {
   element.classList.add(triggerClass);
 
-  element.style.animationDuration = `${randomValue(0.6, 1)}s`
+  element.style.animationDuration = `${randomValue(0.3, 0.8)}s`
   element.style.animationDelay = `${randomValue(0, 0.3)}s`
-  element.style.animationIterationCount = `${randomIntValue(5, 10)}`
+  element.style.animationIterationCount = `${randomIntValue(5, 15)}`
   const animations = element.getAnimations();
   try {
     await Promise.all(animations.map(anim => anim.finished));
@@ -155,6 +156,15 @@ async function playSlots() {
 
   await Promise.all(promises);
   sounds.spinWin.play();
+}
+
+function clearSlots() {
+  state.timerSet = false;
+  timerSlots.forEach((slot) => {
+    slot.textContent = "0";
+    slot.classList.remove("finish");
+    slot.classList.remove("spin")
+  })
 }
 
 function hideElement(element: HTMLElement | null): void {
@@ -411,7 +421,6 @@ async function createPopup(): Promise<void> {
   popup.once("tauri://close-requested", async () => {
     await popup.destroy();
     state.popupActive = false;
-    state.timerSet = false;
     toggleBlock();
     startLoading();
     startPage();
@@ -420,6 +429,9 @@ async function createPopup(): Promise<void> {
 
 function startPage(): void {
   setAnimTime(0);
+  state.timerSet = false
+  state.timerRolled = false
+  clearSlots()
   state.currTimerTime = BASE_TIMER_TIME_MS;
   pauseTimer();
   timerDialog.showModal();
@@ -468,12 +480,12 @@ function initEventListeners(): void {
   });
 
   dom.gambleBtn?.addEventListener("click", () => {
-    state.timerSet = true;
+    state.timerRolled = true;
     playSlots()
   })
 
   document.getElementById("dialog-cancel-btn")?.addEventListener("click", () => {
-    if (!state.timerSet) {
+    if (!state.timerSet || !state.timerRolled) {
       playShake(document.getElementById("dialog-title"))
       sounds.error.currentTime = 0
       sounds.error.play()
@@ -484,13 +496,14 @@ function initEventListeners(): void {
   });
 
   document.getElementById("dialog-confirm-btn")?.addEventListener("click", () => {
-    if (!state.timerSet) {
+    if (!state.timerRolled ) {
       playShake(document.getElementById("dialog-title"))
       sounds.error.currentTime = 0
       sounds.error.play()
       return
     }
     computeTime();
+    state.timerSet = true
     restartTimer();
     unpauseTimer();
     timerDialog.close();

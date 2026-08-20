@@ -238,8 +238,6 @@ dialog.select-timer {
     max-width: 320px;
     width: 90%;
     text-align: center;
-
-
 }
 
 dialog.select-timer::backdrop {
@@ -366,6 +364,19 @@ dialog.select-timer::backdrop {
     height: 2rem;
     color: black;
     cursor: pointer;
+}
+
+.timer-options:has(.gamble-text.spin) + .dialog-timer-container .dialog-close-btn {
+    filter: grayscale(40%);
+}
+
+dialog.select-timer:has(.spin) {
+    pointer-events: none;
+}
+
+#dialog-cancel-btn {
+    pointer-events: auto;
+    filter: none;
 }
 
 .dialog-close-btn:hover {
